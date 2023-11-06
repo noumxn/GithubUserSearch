@@ -11,7 +11,11 @@ import SwiftUI
 struct GithubUserSearchApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            NavigationView {
+                SearchView()
+                    .navigationTitle("GitHub User Search")
+                    .font(.title2)
+            }
         }
     }
 }

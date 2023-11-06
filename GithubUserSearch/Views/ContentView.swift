@@ -8,8 +8,13 @@
 import SwiftUI
 
 struct ContentView: View {
-    
     @State private var user: GithubUser?
+    let username: String
+
+    init(username: String) {
+        self.username = username
+    }
+    
     var body: some View {
         VStack (spacing: 20) {
             
@@ -17,7 +22,7 @@ struct ContentView: View {
                 image
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .clipShape(/*@START_MENU_TOKEN@*/Circle()/*@END_MENU_TOKEN@*/)
+                    .clipShape(Circle())
             } placeholder: {
                 Circle()
                     .foregroundColor(.secondary)
@@ -47,24 +52,29 @@ struct ContentView: View {
             Spacer()
         }
         .padding()
-        .task {
-            do {
-                user = try await getUserData(username: "noumxn")
-            } catch GHError.invalidURL {
-                print("Invalid URL")
-            } catch GHError.invalidResponse {
-                print("Invalid Response")
-            } catch GHError.invalidData {
-                print("Invalid Data")
-            } catch {
-                print("Uh oh! Something went wrong :/")
-            }
+        .onAppear() {
+            fetchData()
         }
     }
+    func fetchData() {
+            Task {
+                do {
+                    user = try await getUserData(username: username)
+                } catch GHError.invalidURL {
+                    print("Invalid URL")
+                } catch GHError.invalidResponse {
+                    print("Invalid Response")
+                } catch GHError.invalidData {
+                    print("Invalid Data")
+                } catch {
+                    print("Uh oh! Something went wrong :/")
+                }
+            }
+        }
 }
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-    }
-}
+//
+//struct ContentView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ContentView(username: <#String#>)
+//    }
+//}
