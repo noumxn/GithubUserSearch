@@ -8,7 +8,7 @@
 import Foundation
 
 func getFollowing(username:String) async throws -> [GithubUser] {
-    let endpoint = "https://api.github.com/\(username)/following"
+    let endpoint = "https://api.github.com/users/\(username)/following"
     
     guard let url = URL(string: endpoint) else {
         throw GHError.invalidURL

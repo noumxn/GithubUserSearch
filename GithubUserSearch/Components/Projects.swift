@@ -8,7 +8,7 @@
 import Foundation
 
 func getProjects(username: String) async throws -> [GithubProject] {
-    let endpoint = "https://api.github.com/\(username)/repos"
+    let endpoint = "https://api.github.com/users/\(username)/repos"
     
     guard let url = URL(string: endpoint) else {
         throw GHError.invalidURL
