@@ -12,6 +12,7 @@ struct ContentView: View {
     @State private var projects: [GithubProject] = []
     @State private var followers: [GithubUser] = []
     @State private var following: [GithubUser] = []
+    @State private var selectedTab = 0
     let username: String
 
     init(username: String) {
@@ -52,69 +53,80 @@ struct ContentView: View {
                     }
                 }
                 
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("Projects")
-                        .font(.title)
-                    
-                    ForEach(projects, id: \.name) { project in
-                        VStack(alignment: .leading) {
-                            Text(project.name)
-                                .font(.headline)
-                                .bold()
-                            if let description = project.description {
-                                Text(description)
-                                    .font(.subheadline)
+                Picker(selection: $selectedTab, label: Text("Select a tab")) {
+                    Text("Projects").tag(0)
+                    Text("Followers").tag(1)
+                    Text("Following").tag(2)
+                }
+                .pickerStyle(SegmentedPickerStyle())
+                
+                if selectedTab == 0 {
+                    // Display Projects
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("Projects")
+                            .font(.title)
+                        
+                        ForEach(projects, id: \.name) { project in
+                            VStack(alignment: .leading) {
+                                Text(project.name)
+                                    .font(.headline)
+                                    .bold()
+                                if let description = project.description {
+                                    Text(description)
+                                        .font(.subheadline)
+                                }
+                            }
+                        }
+                    }
+                } else if selectedTab == 1 {
+                    // Display Followers
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("Followers")
+                            .font(.title)
+                        
+                        ForEach(followers, id: \.login) { follower in
+                            HStack() {
+                                AsyncImage(url: URL(string: follower.avatarUrl)) { image in
+                                    image
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .clipShape(Circle())
+                                } placeholder: {
+                                    Circle()
+                                        .foregroundColor(.secondary)
+                                }
+                                .frame(width: 50, height: 50)
+                                Text(follower.login)
+                                    .font(.headline)
+                                    .bold()
+                            }
+                        }
+                    }
+                } else if selectedTab == 2 {
+                    // Display Following
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("Following")
+                            .font(.title)
+                        
+                        ForEach(following, id: \.login) { followed in
+                            HStack() {
+                                AsyncImage(url: URL(string: followed.avatarUrl)) { image in
+                                    image
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .clipShape(Circle())
+                                } placeholder: {
+                                    Circle()
+                                        .foregroundColor(.secondary)
+                                }
+                                .frame(width: 50, height: 50)
+                                Text(followed.login)
+                                    .font(.headline)
+                                    .bold()
                             }
                         }
                     }
                 }
-                
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("Followers")
-                        .font(.title)
-                    
-                    ForEach(followers, id: \.login) { followers in
-                        HStack() {
-                            AsyncImage(url: URL(string: followers.avatarUrl)) { image in
-                                image
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .clipShape(Circle())
-                            } placeholder: {
-                                Circle()
-                                    .foregroundColor(.secondary)
-                            }
-                            .frame(width: 50, height: 50)
-                            Text(followers.login)
-                                .font(.headline)
-                                .bold()
-                        }
-                    }
-                }
-                
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("Following")
-                        .font(.title)
-                    
-                    ForEach(following, id: \.login) { following in
-                        HStack() {
-                            AsyncImage(url: URL(string: following.avatarUrl)) { image in
-                                image
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .clipShape(Circle())
-                            } placeholder: {
-                                Circle()
-                                    .foregroundColor(.secondary)
-                            }
-                            .frame(width: 50, height: 50)
-                            Text(following.login)
-                                .font(.headline)
-                                .bold()
-                        }
-                    }
-                }
-                
 
                 
                 Spacer()
@@ -145,7 +157,7 @@ struct ContentView: View {
             }
         }
 }
-//
+
 //struct ContentView_Previews: PreviewProvider {
 //    static var previews: some View {
 //        ContentView(username: "noumxn")
