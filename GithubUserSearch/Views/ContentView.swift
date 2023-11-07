@@ -47,6 +47,8 @@ struct ContentView: View {
                     }
                 }
             }
+            
+            
 
             
             Spacer()
@@ -72,9 +74,9 @@ struct ContentView: View {
             }
         }
 }
-//
+
 //struct ContentView_Previews: PreviewProvider {
 //    static var previews: some View {
-//        ContentView(username: <#String#>)
+//        ContentView(username: "noumxn")
 //    }
 //}
