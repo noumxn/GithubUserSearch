@@ -13,6 +13,8 @@ struct ContentView: View {
     @State private var followers: [GithubUser] = []
     @State private var following: [GithubUser] = []
     @State private var selectedTab = 0
+    @State private var errorMessage: String? = nil
+    
     let username: String
 
     init(username: String) {
@@ -22,6 +24,11 @@ struct ContentView: View {
     var body: some View {
         ScrollView {
             VStack (spacing: 20) {
+                if let errorMessage = errorMessage {
+                    Text(errorMessage)
+                        .foregroundColor(.red)
+                        .padding()
+                }
                 
                 AsyncImage(url: URL(string: user?.avatarUrl ?? "")) { image in
                     image
@@ -146,13 +153,13 @@ struct ContentView: View {
                     followers = try await getFollowers(username: username)
                     following = try await getFollowing(username: username)
                 } catch GHError.invalidURL {
-                    print("Invalid URL")
-                } catch GHError.invalidResponse {
-                    print("Invalid Response")
+                    errorMessage = "Invalid URL"
                 } catch GHError.invalidData {
-                    print("Invalid Data")
+                    errorMessage = "User not found or invalid data received."
+                } catch GHError.invalidResponse {
+                    errorMessage = "User not found or invalid data received."
                 } catch {
-                    print("Uh oh! Something went wrong :/")
+                    errorMessage = "Uh oh! Something went wrong :/"
                 }
             }
         }

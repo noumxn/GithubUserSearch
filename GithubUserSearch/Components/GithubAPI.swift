@@ -8,6 +8,7 @@
 import Foundation
 
 func getUserData(username: String) async throws -> GithubUser {
+    print("-\(username)-")
     let endpoint = "https://api.github.com/users/\(username)"
     
     guard let url = URL(string: endpoint) else {
